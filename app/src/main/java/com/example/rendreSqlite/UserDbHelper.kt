@@ -10,8 +10,8 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
     public val db = writableDatabase
 
     companion object{
-        public val DATABASE_VERSION = 1
-        public val DATABASE_NAME = "dbusers.db"
+        public val DATABASE_VERSION = 2
+        public val DATABASE_NAME = "PFE.db"
 
 
 
