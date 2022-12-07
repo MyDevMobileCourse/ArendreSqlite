@@ -23,12 +23,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var date_naissance: EditText
     lateinit var AdresseEmail: TextInputLayout
     lateinit var adresse_email: EditText
-    lateinit var Classe: TextInputLayout
-    lateinit var classe: EditText
     var user_id: Int? = null
+    lateinit var Tel: TextInputLayout
+    lateinit var tel: EditText
+    lateinit var Login: TextInputLayout
+    lateinit var login: EditText
+    lateinit var Password: TextInputLayout
+    lateinit var password: EditText
     lateinit var AddUser: Button
     lateinit var cancelButton: Button
-    lateinit var items: Array<String>
     lateinit var userDbHelper: UserDbHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         userDbHelper = UserDbHelper(this)
 
         init()
-        val listOfInputs = listOf(nom_prenom, date_naissance, adresse_email, classe)
+        val listOfInputs = listOf(nom_prenom, date_naissance, adresse_email, tel, login, password)
         listOfInputs.forEach { listenOnInput(it) }
 
         cancelButton.setOnClickListener {
@@ -68,16 +71,15 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        val alertDialogBuilder = AlertDialog.Builder(this)
         AddUser.setOnClickListener {
             if (allValid()) {
-                val alertDialogBuilder = AlertDialog.Builder(this)
                 alertDialogBuilder.setTitle("Submit")
                 alertDialogBuilder.setMessage(
                     "Do you wanna submit this data ?\n" +
                             "Nom et Prénom : ${nom_prenom.text}\n" +
                             "Date de naissance : ${date_naissance.text}\n" +
-                            "Adresse email : ${adresse_email.text}\n" +
-                            "Classe : ${classe.text}"
+                            "Adresse email : ${adresse_email.text}\n"
                 )
                 alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
                     addUser()
@@ -89,18 +91,20 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
                 alertDialogBuilder.show()
-            } else {
-                val snackBar: Snackbar =
-                    Snackbar.make(
-                        findViewById(R.id.AddUser),
-                        "Veuillez remplir tous les champs",
-                        Snackbar.LENGTH_LONG
-                    )
-                snackBar.setAction("OK") {
-                    snackBar.dismiss()
+            } else if(listOfInputs.any { it.text.isBlank() }) {
+                alertDialogBuilder.setTitle("Error")
+                alertDialogBuilder.setMessage("Please fill all fields")
+                alertDialogBuilder.setPositiveButton("Ok") { dialog, which ->
+                    dialog.dismiss()
                 }
-                Handler(Looper.getMainLooper()).postDelayed({ snackBar.dismiss() }, 7500)
-                snackBar.show()
+                alertDialogBuilder.show()
+            } else{
+                    alertDialogBuilder.setTitle("Error")
+                alertDialogBuilder.setMessage("Please check your inputs")
+                alertDialogBuilder.setPositiveButton("Ok") { dialog, which ->
+                    dialog.dismiss()
+                }
+                alertDialogBuilder.show()
             }
         }
     }
@@ -113,13 +117,14 @@ class MainActivity : AppCompatActivity() {
         date_naissance = findViewById(R.id.date_naissance)
         AdresseEmail = findViewById(R.id.AdresseEmail)
         adresse_email = findViewById(R.id.adresse_email)
-        Classe = findViewById(R.id.Classe)
-        classe = findViewById(R.id.classe)
+        Tel = findViewById(R.id.Tel)
+        tel = findViewById(R.id.tel)
+        Login = findViewById(R.id.Login)
+        login = findViewById(R.id.login)
+        Password = findViewById(R.id.Password)
+        password = findViewById(R.id.password)
         AddUser = findViewById(R.id.AddUser)
         cancelButton = findViewById(R.id.annuler)
-        items = resources.getStringArray(R.array.classe)
-        val adapter = ArrayAdapter(applicationContext, R.layout.class_item, items)
-        (classe as? AutoCompleteTextView)?.setAdapter(adapter)
         this.initDatePicker()
         if (intent.hasExtra("user_id")) {
             user_id = intent.getIntExtra("user_id", 0)
@@ -127,7 +132,10 @@ class MainActivity : AppCompatActivity() {
             nom_prenom.setText(user.nom_prenom)
             date_naissance.setText(user.date_naissance)
             adresse_email.setText(user.adresse_email)
-            classe.setText(user.classe)
+//            tel.setText(user.tel)
+//            login.setText(user.login)
+//            password.setText(user.password)
+//
             AddUser.text = "Update"
         }
     }
@@ -222,18 +230,7 @@ class MainActivity : AppCompatActivity() {
                 fieldLayout.error = "Date doit être au format dd-MM-yyyy"
                 error = true
             }
-        } else if (field == classe) {
-            var found = false
-            items.forEach { item ->
-                if (item == field.text.toString()) {
-                    found = true
-                }
-            }
-            if (!found) {
-                fieldLayout.error = "Classe invalide"
-                error = true
-            }
-        } else if (field == adresse_email) {
+        }  else if (field == adresse_email) {
             if (!Patterns.EMAIL_ADDRESS.matcher(field.text.toString()).matches()) {
                 fieldLayout.error = "Adresse email invalide"
                 error = true
@@ -241,6 +238,25 @@ class MainActivity : AppCompatActivity() {
         } else if (field.text.isEmpty()) {
             fieldLayout.error = "Ce champ est obligatoire"
             error = true
+        } else if (field == password ){
+            if (field.text.length < 8) {
+                fieldLayout.error = "Mot de passe doit contenir au moins 8 caractères"
+                error = true
+            }
+        } else if (field == tel) {
+            if (field.text.length != 8) {
+                fieldLayout.error = "Numéro de téléphone doit contenir exactement 8 chiffres"
+                error = true
+            }
+            else if (!field.text.toString().matches(Regex("[0-9]+"))) {
+                fieldLayout.error = "Numéro de téléphone doit contenir que des chiffres"
+                error = true
+            }
+        }else if (field == login) {
+            if (field.text.length < 4) {
+                fieldLayout.error = "Login doit contenir au moins 4 caractères"
+                error = true
+            }
         } else {
             fieldLayout.error = null
         }
@@ -260,29 +276,37 @@ class MainActivity : AppCompatActivity() {
         if (AdresseEmail.error != null) {
             valid = false
         }
-        if (Classe.error != null) {
+        if (Tel.error != null) {
+            valid = false
+        }
+        if (Login.error != null) {
+            valid = false
+        }
+        if (Password.error != null) {
             valid = false
         }
         return valid
     }
 
     fun addUser() {
+        val nom = nom_prenom.text.toString()
+        val date = date_naissance.text.toString()
+        val email = adresse_email.text.toString()
+        val tel = tel.text.toString()
+        val login = login.text.toString()
+        val password = password.text.toString()
+        val db = userDbHelper.db
         if (user_id == null) {
 
-            val nom = nom_prenom.text.toString()
-            val date = date_naissance.text.toString()
-            val email = adresse_email.text.toString()
-            val classe = classe.text.toString()
-
-            val db = userDbHelper.db
 
             val values = ContentValues()
 
             values.put(DBContract.UserEntry.COLUMN_EMAIL, email)
             values.put(DBContract.UserEntry.COLUMN_NAME, nom)
             values.put(DBContract.UserEntry.COLUMN_DATE, date)
-            values.put(DBContract.UserEntry.COLUMN_CLASSE, classe)
-
+//            values.put(DBContract.UserEntry.COLUMN_TEL, tel)
+//            values.put(DBContract.UserEntry.COLUMN_LOGIN, login)
+//            values.put(DBContract.UserEntry.COLUMN_PASSWORD, password)
             val newRowId = db.insert(DBContract.UserEntry.TABLE_NAME, null, values)
             if (newRowId == -1L) {
                 Snackbar.make(
@@ -297,10 +321,6 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         } else {
-            val nom = nom_prenom.text.toString()
-            val date = date_naissance.text.toString()
-            val email = adresse_email.text.toString()
-            val classe = classe.text.toString()
 
             val db = userDbHelper.db
 
@@ -309,7 +329,9 @@ class MainActivity : AppCompatActivity() {
             values.put(DBContract.UserEntry.COLUMN_EMAIL, email)
             values.put(DBContract.UserEntry.COLUMN_NAME, nom)
             values.put(DBContract.UserEntry.COLUMN_DATE, date)
-            values.put(DBContract.UserEntry.COLUMN_CLASSE, classe)
+//            values.put(DBContract.UserEntry.COLUMN_TEL, tel)
+//            values.put(DBContract.UserEntry.COLUMN_LOGIN, login)
+//            values.put(DBContract.UserEntry.COLUMN_PASSWORD, password)
 
             val selection = DBContract.UserEntry.COLUMN_USER_ID + " = ?"
             val selectionArgs = arrayOf(user_id.toString())
