@@ -136,10 +136,10 @@ class MainActivity : AppCompatActivity() {
             nom_prenom.setText(user.nom_prenom)
             date_naissance.setText(user.date_naissance)
             adresse_email.setText(user.adresse_email)
-//            tel.setText(user.tel)
-//            login.setText(user.login)
-//            password.setText(user.password)
-//
+            tel.setText(user.tel.toString())
+            login.setText(user.login)
+            password.setText(user.password)
+
             AddUser.text = "Update"
         }
     }
@@ -318,8 +318,8 @@ class MainActivity : AppCompatActivity() {
             } else {
                 val intent = intent
                 intent.putExtra("message", "Utilisateur ajouté avec succès")
-                //setResult(RESULT_OK, intent)
-                //finish()
+                setResult(RESULT_OK, intent)
+                finish()
                 listOfInputs.forEach{
                     it.text.clear()
                     it.error = null
@@ -348,8 +348,8 @@ class MainActivity : AppCompatActivity() {
                     it.text.clear()
                     it.error = null
                 }
-            //setResult(RESULT_OK, intent)
-                //finish()
+                setResult(RESULT_OK, intent)
+                finish()
             }
         }
 
