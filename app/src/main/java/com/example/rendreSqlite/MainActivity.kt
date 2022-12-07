@@ -50,7 +50,10 @@ class MainActivity : AppCompatActivity() {
                 alertDialogBuilder.setTitle("Quit")
                 alertDialogBuilder.setMessage("Are you sure you want to clear data?")
                 alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
-                    listOfInputs.forEach { it.text.clear() }
+                    listOfInputs.forEach {
+                        it.text.clear()
+                        it.error = null
+                    }
                     dialog.dismiss()
                 }
                 alertDialogBuilder.setNegativeButton("No") { dialog, which ->
@@ -319,6 +322,7 @@ class MainActivity : AppCompatActivity() {
                 //finish()
                 listOfInputs.forEach{
                     it.text.clear()
+                    it.error = null
                 }
             }
         } else {
@@ -342,6 +346,7 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("message", "Utilisateur modifié avec succès")
                 listOfInputs.forEach{
                     it.text.clear()
+                    it.error = null
                 }
             //setResult(RESULT_OK, intent)
                 //finish()

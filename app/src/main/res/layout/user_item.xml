@@ -8,13 +8,16 @@
     app:cardUseCompatPadding="true"
     app:cardElevation="6dp"
     app:cardCornerRadius="6dp">
-    <LinearLayout
+    <HorizontalScrollView
+        android:id="@+id/user_item_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:fillViewport="true">
 
 
-        <LinearLayout
+
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -63,27 +66,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="12dp">
 
-            <TextView
-                android:id="@+id/labelclasse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="Classe :"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/classeF"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DSI31" />
-
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -103,6 +86,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="youssef.chlendi@gmail.com" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/label_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Login :"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/loginF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="youssef" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/label_Tel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Tel :"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/telF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="22332233" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -131,6 +167,6 @@
 
                 android:text="Delete" />
         </LinearLayout>
-    </LinearLayout>
+    </HorizontalScrollView>
 
 </androidx.cardview.widget.CardView>
