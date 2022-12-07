@@ -20,7 +20,9 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
                     DBContract.UserEntry.COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     DBContract.UserEntry.COLUMN_NAME + " TEXT," +
                     DBContract.UserEntry.COLUMN_EMAIL + " TEXT," +
-                    DBContract.UserEntry.COLUMN_CLASSE + " TEXT," +
+                    DBContract.UserEntry.COLUMN_LOGIN + " TEXT," +
+                    DBContract.UserEntry.COLUMN_PASSWORD + " TEXT," +
+                    DBContract.UserEntry.COLUMN_TEL + " INTEGER," +
                     DBContract.UserEntry.COLUMN_DATE + " TEXT)"
 
         public val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS $DBContract.UserEntry.TABLE_NAME"
@@ -43,8 +45,10 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
             DBContract.UserEntry.COLUMN_USER_ID,
             DBContract.UserEntry.COLUMN_NAME,
             DBContract.UserEntry.COLUMN_EMAIL,
-            DBContract.UserEntry.COLUMN_CLASSE,
-            DBContract.UserEntry.COLUMN_DATE
+            DBContract.UserEntry.COLUMN_DATE,
+            DBContract.UserEntry.COLUMN_LOGIN,
+            DBContract.UserEntry.COLUMN_PASSWORD,
+            DBContract.UserEntry.COLUMN_TEL
         )
         val cursor = db.query(
             DBContract.UserEntry.TABLE_NAME,
@@ -60,9 +64,11 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
                 val id = getInt(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_USER_ID))
                 val name = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_NAME))
                 val email = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_EMAIL))
-                val classe = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_CLASSE))
                 val date = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_DATE))
-                users.add(UserModel(id, name, date,email, classe))
+                val login = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_LOGIN))
+                val password = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_PASSWORD))
+                val tel = getInt(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_TEL))
+                users.add(UserModel(id, name, date,email, tel, login, password))
             }
         }
         println("users: $users")
@@ -79,8 +85,10 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
             DBContract.UserEntry.COLUMN_USER_ID,
             DBContract.UserEntry.COLUMN_NAME,
             DBContract.UserEntry.COLUMN_EMAIL,
-            DBContract.UserEntry.COLUMN_CLASSE,
-            DBContract.UserEntry.COLUMN_DATE
+            DBContract.UserEntry.COLUMN_DATE,
+            DBContract.UserEntry.COLUMN_LOGIN,
+            DBContract.UserEntry.COLUMN_PASSWORD,
+            DBContract.UserEntry.COLUMN_TEL
         )
         val selection = "${DBContract.UserEntry.COLUMN_NAME} LIKE ? OR ${DBContract.UserEntry.COLUMN_EMAIL} LIKE ?"
         val selectionArgs = arrayOf("%$search%", "%$search%")
@@ -98,9 +106,11 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
                 val id = getInt(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_USER_ID))
                 val name = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_NAME))
                 val email = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_EMAIL))
-                val classe = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_CLASSE))
                 val date = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_DATE))
-                users.add(UserModel(id, name,date, email, classe))
+                val login = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_LOGIN))
+                val password = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_PASSWORD))
+                val tel = getInt(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_TEL))
+                users.add(UserModel(id, name, date,email, tel, login, password))
             }
         }
         return users
@@ -120,8 +130,10 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
             DBContract.UserEntry.COLUMN_USER_ID,
             DBContract.UserEntry.COLUMN_NAME,
             DBContract.UserEntry.COLUMN_EMAIL,
-            DBContract.UserEntry.COLUMN_CLASSE,
-            DBContract.UserEntry.COLUMN_DATE
+            DBContract.UserEntry.COLUMN_DATE,
+            DBContract.UserEntry.COLUMN_LOGIN,
+            DBContract.UserEntry.COLUMN_PASSWORD,
+            DBContract.UserEntry.COLUMN_TEL
         )
         val selection = "${DBContract.UserEntry.COLUMN_USER_ID} = ?"
         val selectionArgs = arrayOf("$userId")
@@ -140,9 +152,11 @@ class UserDbHelper (context:Context) : SQLiteOpenHelper(context,DATABASE_NAME, n
                 val id = getInt(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_USER_ID))
                 val name = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_NAME))
                 val email = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_EMAIL))
-                val classe = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_CLASSE))
                 val date = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_DATE))
-                user = UserModel(id, name, date,email, classe)
+                val login = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_LOGIN))
+                val password = getString(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_PASSWORD))
+                val tel = getInt(getColumnIndexOrThrow(DBContract.UserEntry.COLUMN_TEL))
+                user = UserModel(id, name, date,email, tel, login, password)
             }
         }
         return user!!

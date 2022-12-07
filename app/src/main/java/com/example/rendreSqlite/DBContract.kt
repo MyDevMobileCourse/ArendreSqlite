@@ -10,7 +10,10 @@ object DBContract {
             val COLUMN_NAME = "name"
             val COLUMN_DATE = "date"
             val COLUMN_EMAIL = "email"
-            val COLUMN_CLASSE = "classe"
+            val COLUMN_PASSWORD = "password"
+            val COLUMN_LOGIN = "login"
+            val COLUMN_TEL = "tel"
+
         }
     }
 }

@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var AddUser: Button
     lateinit var cancelButton: Button
     lateinit var userDbHelper: UserDbHelper
+    lateinit var listOfInputs: List<EditText>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         userDbHelper = UserDbHelper(this)
 
         init()
-        val listOfInputs = listOf(nom_prenom, date_naissance, adresse_email, tel, login, password)
+        listOfInputs = listOf(nom_prenom, date_naissance, adresse_email, tel, login, password)
         listOfInputs.forEach { listenOnInput(it) }
 
         cancelButton.setOnClickListener {
@@ -296,17 +297,14 @@ class MainActivity : AppCompatActivity() {
         val login = login.text.toString()
         val password = password.text.toString()
         val db = userDbHelper.db
+        val values = ContentValues()
+        values.put(DBContract.UserEntry.COLUMN_EMAIL, email)
+        values.put(DBContract.UserEntry.COLUMN_NAME, nom)
+        values.put(DBContract.UserEntry.COLUMN_DATE, date)
+        values.put(DBContract.UserEntry.COLUMN_TEL, tel)
+        values.put(DBContract.UserEntry.COLUMN_LOGIN, login)
+        values.put(DBContract.UserEntry.COLUMN_PASSWORD, password)
         if (user_id == null) {
-
-
-            val values = ContentValues()
-
-            values.put(DBContract.UserEntry.COLUMN_EMAIL, email)
-            values.put(DBContract.UserEntry.COLUMN_NAME, nom)
-            values.put(DBContract.UserEntry.COLUMN_DATE, date)
-//            values.put(DBContract.UserEntry.COLUMN_TEL, tel)
-//            values.put(DBContract.UserEntry.COLUMN_LOGIN, login)
-//            values.put(DBContract.UserEntry.COLUMN_PASSWORD, password)
             val newRowId = db.insert(DBContract.UserEntry.TABLE_NAME, null, values)
             if (newRowId == -1L) {
                 Snackbar.make(
@@ -317,22 +315,13 @@ class MainActivity : AppCompatActivity() {
             } else {
                 val intent = intent
                 intent.putExtra("message", "Utilisateur ajouté avec succès")
-                setResult(RESULT_OK, intent)
-                finish()
+                //setResult(RESULT_OK, intent)
+                //finish()
+                listOfInputs.forEach{
+                    it.text.clear()
+                }
             }
         } else {
-
-            val db = userDbHelper.db
-
-            val values = ContentValues()
-
-            values.put(DBContract.UserEntry.COLUMN_EMAIL, email)
-            values.put(DBContract.UserEntry.COLUMN_NAME, nom)
-            values.put(DBContract.UserEntry.COLUMN_DATE, date)
-//            values.put(DBContract.UserEntry.COLUMN_TEL, tel)
-//            values.put(DBContract.UserEntry.COLUMN_LOGIN, login)
-//            values.put(DBContract.UserEntry.COLUMN_PASSWORD, password)
-
             val selection = DBContract.UserEntry.COLUMN_USER_ID + " = ?"
             val selectionArgs = arrayOf(user_id.toString())
 
@@ -345,14 +334,17 @@ class MainActivity : AppCompatActivity() {
             if (count == 0) {
                 Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Erreur de modification",
+                    "User not found",
                     Snackbar.LENGTH_SHORT
                 ).show()
             } else {
                 val intent = intent
                 intent.putExtra("message", "Utilisateur modifié avec succès")
-                setResult(RESULT_OK, intent)
-                finish()
+                listOfInputs.forEach{
+                    it.text.clear()
+                }
+            //setResult(RESULT_OK, intent)
+                //finish()
             }
         }
 
